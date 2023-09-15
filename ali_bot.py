@@ -2,57 +2,79 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.service import Service
 
+class Element_finder:
+    def __init__(self, _driver : webdriver.Firefox):
+        self.__driver = _driver
+    
+    # if dont have it return none
+    def get_login_button(self):
+        login_button = self.__driver.find_elements(By.XPATH, value='//span[text()=" ورود یا ثبت‌نام "]')
+        if len(login_button) == 0:
+            return None
+        else:
+            return login_button[0]
+    
+    def get_mobile_field(self):
+        return self.__driver.find_element(By.XPATH, value= '//input[@name="mobile"]')
+    
+    def get_mobile_accept_button(self):
+        return self.__driver.find_element(By.XPATH, value='//button[text()=" تایید و دریافت کد "]')
+    
+    def get_register_code_fields(self):
+        return self.__driver.find_elements(By.XPATH, value='//div[contains(@class, "digits justify-between text-center mb-6")]/input')
+    
+    # return dict of web elements with keys {user, password, button}
+    def get_user_pass_elements(self):
+        elements = dict()
+        elements["user"] = self.__driver.find_element(By.XPATH, value='//div[contains(@class, "a-input mb-5 is-lg")]//input')
+        elements["password"] = self.__driver.find_element(By.XPATH, value='//div[contains(@class, "a-input password-input mb-6 has-prepend is-lg")]//input')
+        elements["button"] = self.get_login_button()
+        return elements
+    
+    def login_with_pass_button(self):
+        return self.__driver.find_element(By.XPATH, value='//button[text()=" ورود با کلمه عبور "]')
+
+
 class Ali_bot:
     # TODO use other browsers
     def __init__(self):
         self.__ali_url = "https://alibaba.ir/"
         self.__driver = webdriver.Firefox()
         self.__driver.get(self.__ali_url)
+        self.__finder = Element_finder(self.__driver)
     
     def check_login(self):
-        login_button = self.__driver.find_elements(By.XPATH, value='//span[text()=" ورود یا ثبت‌نام "]')
-        if len(login_button) == 0:
+        if self.__finder.get_login_button == None:
             return True
         else:
             return False
     
     '''after use this you should call enter_register_code'''
     def login_with_phone(self, phone_num):
-        if self.check_login():
-            raise "login before"
         self.__open_login_page()
 
         # find elements
-        mobile_field = self.__driver.find_element(By.XPATH, value= '//input[@name="mobile"]')
-        accept_button = self.__driver.find_element(By.XPATH, value='//button[text()=" تایید و دریافت کد "]')
+        mobile_field = self.__finder.get_mobile_field()
+        accept_button = self.__finder.get_mobile_accept_button()
         
         mobile_field.send_keys(phone_num)
         accept_button.click()
 
     def __open_login_page(self):
-        login_button = self.__driver.find_element(By.XPATH, value='//span[text()=" ورود یا ثبت‌نام "]')
-        login_button.click()
+        self.__finder.get_login_button().click()
 
     def enter_register_code(self, register_code):
-        num_fields = self.__driver.find_elements(By.XPATH, value='//div[contains(@class, "digits justify-between text-center mb-6")]/input')
+        num_fields = self.__finder.get_register_code_fields()
         for i in range(len(num_fields)):
             num_fields[i].send_keys(register_code[i])
 
     def login_with_user_pass(self, user, password):
-        if self.check_login():
-            raise "login before"
-        self.__open_login_page()
-
         # go to user pass page
-        user_pass_button = self.__driver.find_element(By.XPATH, value='//button[text()=" ورود با کلمه عبور "]')
-        user_pass_button.click()
+        self.__open_login_page()
+        self.__finder.login_with_pass_button.click()
 
-        # find elements
-        user_field = self.__driver.find_element(By.XPATH, value='//div[contains(@class, "a-input mb-5 is-lg")]//input')
-        pass_field = self.__driver.find_element(By.XPATH, value='//div[contains(@class, "a-input password-input mb-6 has-prepend is-lg")]//input')
-        accept_button = self.__driver.find_element(By.XPATH, value='//button[text()=" ورود به علی‌بابا "]')
-
-        user_field.send_keys(user)
-        pass_field.send_keys(password)
-        accept_button.click()
+        login_form = self.__finder.get_user_pass_elements()
+        login_form["user"].send_keys(user)
+        login_form["password"].send_keys(password)
+        login_form["button"].click()
   
