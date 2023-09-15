@@ -9,9 +9,12 @@ class Ali_bot:
         self.__driver = webdriver.Firefox()
         self.__driver.get(self.__ali_url)
     
-    # TODO
     def check_login(self):
-        return False
+        login_button = self.__driver.find_elements(By.XPATH, value='//span[text()=" ورود یا ثبت‌نام "]')
+        if len(login_button) == 0:
+            return True
+        else:
+            return False
     
     '''after use this you should call enter_register_code'''
     def login_with_phone(self, phone_num):
@@ -19,6 +22,7 @@ class Ali_bot:
             raise "login before"
         self.__open_login_page()
 
+        # find elements
         mobile_field = self.__driver.find_element(By.XPATH, value= '//input[@name="mobile"]')
         accept_button = self.__driver.find_element(By.XPATH, value='//button[text()=" تایید و دریافت کد "]')
         
@@ -33,4 +37,22 @@ class Ali_bot:
         num_fields = self.__driver.find_elements(By.XPATH, value='//div[contains(@class, "digits justify-between text-center mb-6")]/input')
         for i in range(len(num_fields)):
             num_fields[i].send_keys(register_code[i])
-    
+
+    def login_with_user_pass(self, user, password):
+        if self.check_login():
+            raise "login before"
+        self.__open_login_page()
+
+        # go to user pass page
+        user_pass_button = self.__driver.find_element(By.XPATH, value='//button[text()=" ورود با کلمه عبور "]')
+        user_pass_button.click()
+
+        # find elements
+        user_field = self.__driver.find_element(By.XPATH, value='//div[contains(@class, "a-input mb-5 is-lg")]//input')
+        pass_field = self.__driver.find_element(By.XPATH, value='//div[contains(@class, "a-input password-input mb-6 has-prepend is-lg")]//input')
+        accept_button = self.__driver.find_element(By.XPATH, value='//button[text()=" ورود به علی‌بابا "]')
+
+        user_field.send_keys(user)
+        pass_field.send_keys(password)
+        accept_button.click()
+  
