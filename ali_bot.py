@@ -28,7 +28,7 @@ class Element_finder:
         elements = dict()
         elements["user"] = self.__driver.find_element(By.XPATH, value='//div[contains(@class, "a-input mb-5 is-lg")]//input')
         elements["password"] = self.__driver.find_element(By.XPATH, value='//div[contains(@class, "a-input password-input mb-6 has-prepend is-lg")]//input')
-        elements["button"] = self.get_login_button()
+        elements["button"] = self.__driver.find_element(By.XPATH, value='//button[text()=" ورود به علی‌بابا "]')
         return elements
     
     def login_with_pass_button(self):
@@ -71,10 +71,12 @@ class Ali_bot:
     def login_with_user_pass(self, user, password):
         # go to user pass page
         self.__open_login_page()
-        self.__finder.login_with_pass_button.click()
+        self.__finder.login_with_pass_button().click()
 
         login_form = self.__finder.get_user_pass_elements()
         login_form["user"].send_keys(user)
         login_form["password"].send_keys(password)
         login_form["button"].click()
-  
+
+    def __del__(self):
+        self.__driver.close()
