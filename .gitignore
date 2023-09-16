@@ -2,3 +2,5 @@
 *.html
 __pycache__
 geckodriver.log
+.ipynb_checkpoints
+*.csv
