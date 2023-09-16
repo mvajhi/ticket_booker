@@ -6,8 +6,8 @@ class Element_finder:
     def __init__(self, _driver : webdriver.Firefox):
         self.__driver = _driver
     
-    # if dont have it return none
     def get_login_button(self):
+        '''if dont have it return none'''
         login_button = self.__driver.find_elements(By.XPATH, value='//span[text()=" ورود یا ثبت‌نام "]')
         if len(login_button) == 0:
             return None
@@ -23,8 +23,8 @@ class Element_finder:
     def get_register_code_fields(self):
         return self.__driver.find_elements(By.XPATH, value='//div[contains(@class, "digits justify-between text-center mb-6")]/input')
     
-    # return dict of web elements with keys {user, password, button}
     def get_user_pass_elements(self):
+        '''return dict of web elements with keys {user, password, button}'''
         elements = dict()
         elements["user"] = self.__driver.find_element(By.XPATH, value='//div[contains(@class, "a-input mb-5 is-lg")]//input')
         elements["password"] = self.__driver.find_element(By.XPATH, value='//div[contains(@class, "a-input password-input mb-6 has-prepend is-lg")]//input')
@@ -36,8 +36,8 @@ class Element_finder:
 
 
 class Ali_bot:
-    # TODO use other browsers
     def __init__(self):
+        # TODO use other browsers
         self.__ali_url = "https://alibaba.ir/"
         self.__driver = webdriver.Firefox()
         self.__driver.get(self.__ali_url)
@@ -55,8 +55,8 @@ class Ali_bot:
         else:
             return True
     
-    '''after use this you should call enter_register_code'''
     def login_with_phone(self, phone_num):
+        '''after use this you should call enter_register_code'''
         self.__open_login_page()
 
         # find elements
@@ -76,7 +76,7 @@ class Ali_bot:
             num_fields[i].send_keys(register_code[i])
 
     def login_with_user_pass(self, user, password):
-        # go to user pass page
+        '''go to user pass page'''
         self.__open_login_page()
         self.__finder.login_with_pass_button().click()
 
@@ -85,8 +85,8 @@ class Ali_bot:
         login_form["password"].send_keys(password)
         login_form["button"].click()
 
-    '''save current page as main page'''
     def set_main_page(self):
+        '''save current page as main page'''
         self.main_page = self.__driver.current_url
 
     def start_to_work(self):
