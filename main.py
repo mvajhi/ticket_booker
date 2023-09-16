@@ -1,3 +1,4 @@
+from colorama import Fore
 from simple_term_menu import TerminalMenu
 from ali_bot import Ali_bot
 
@@ -9,6 +10,18 @@ def main():
         main_menu()
 
 
+def print_status():
+    print("\n" * 12)
+
+    if bot.check_login():
+        print(Fore.GREEN + "Login: OK")
+    else:
+        print(Fore.RED + "Login: NOT OK")
+    
+    print("\n")
+        
+
+
 def menu(options):
     op_list = list(options.keys())
     terminal_menu = TerminalMenu(op_list)
@@ -16,8 +29,10 @@ def menu(options):
     options[op_list[menu_entry_index]]()
 
 def main_menu():
+    print_status()
     options = {
         "login": login_menu,
+        "set this page as main": set_main_page,
         "exit": close_app
     }
     menu(options)
@@ -45,6 +60,9 @@ def login_with_phone():
 def close_app():
     # TODO
     exit()
+
+def set_main_page():
+    bot.set_main_page()
 
 if __name__ == "__main__":
     main()

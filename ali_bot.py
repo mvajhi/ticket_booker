@@ -42,12 +42,18 @@ class Ali_bot:
         self.__driver = webdriver.Firefox()
         self.__driver.get(self.__ali_url)
         self.__finder = Element_finder(self.__driver)
+        self.__is_try_to_login = False
     
     def check_login(self):
-        if self.__finder.get_login_button == None:
+        if self.__finder.get_login_button() == None:
             return True
-        else:
+        elif self.__is_try_to_login:
+            self.__is_try_to_login = False
+            return True
+        elif self.__driver.find_element(By.XPATH, value='//button[contains(@aria-label, "ناحیه کاربری")]'):
             return False
+        else:
+            return True
     
     '''after use this you should call enter_register_code'''
     def login_with_phone(self, phone_num):
@@ -61,6 +67,7 @@ class Ali_bot:
         accept_button.click()
 
     def __open_login_page(self):
+        self.__is_try_to_login = True
         self.__finder.get_login_button().click()
 
     def enter_register_code(self, register_code):
@@ -78,5 +85,12 @@ class Ali_bot:
         login_form["password"].send_keys(password)
         login_form["button"].click()
 
+    '''save current page as main page'''
+    def set_main_page(self):
+        self.main_page = self.__driver.current_url
+
+    def start_to_work(self):
+        pass
+    
     def __del__(self):
         self.__driver.close()
