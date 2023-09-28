@@ -82,7 +82,7 @@ def main():
 
     # test.edit_person({"nid": "0123456789"}, {"gender": "male"})
 
-    test.add_a_person({"first_name": "سلطان", "last_name": "غلامی", "nid": "2823456789", "gender" : "male", "birthday" : "86/7/26"})
+    test.edit_person({ "nid": "0200123456", "gender" : "female"}, {"gender" : "male"})
     print("\n" * 2)
     print(test.get_data())
 

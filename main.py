@@ -33,6 +33,7 @@ def main_menu():
     options = {
         "login": login_menu,
         "set this page as main": set_main_page,
+        "add register box": add_register_box,
         "exit": close_app
     }
     menu(options)
@@ -63,6 +64,10 @@ def close_app():
 
 def set_main_page():
     bot.set_main_page()
+
+def add_register_box():
+    count = int(input("how many should add? "))
+    bot.add_register_box(count)
 
 if __name__ == "__main__":
     main()

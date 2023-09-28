@@ -22,7 +22,7 @@ class Element_finder:
     
     def get_register_code_fields(self):
         return self.__driver.find_elements(By.XPATH, value='//div[contains(@class, "digits justify-between text-center mb-6")]/input')
-    
+
     def get_user_pass_elements(self):
         '''return dict of web elements with keys {user, password, button}'''
         elements = dict()
@@ -33,6 +33,9 @@ class Element_finder:
     
     def login_with_pass_button(self):
         return self.__driver.find_element(By.XPATH, value='//button[text()=" ورود با کلمه عبور "]')
+    
+    def get_add_button(self):
+        return self.__driver.find_element(By.XPATH, value='//span[contains(.,"اضافه کردن مسافر جدید")]')
 
 
 class Ali_bot:
@@ -91,6 +94,10 @@ class Ali_bot:
 
     def start_to_work(self):
         pass
+
+    def add_register_box(self, count:int):
+        for i in range(count):
+            self.__finder.get_add_button().click()
     
     def __del__(self):
         self.__driver.close()
