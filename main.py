@@ -33,7 +33,8 @@ def main_menu():
     options = {
         "login": login_menu,
         "set this page as main": set_main_page,
-        "add register box": add_register_box,
+        "fill register": fill_register,
+        "test": test,
         "exit": close_app
     }
     menu(options)
@@ -41,7 +42,8 @@ def main_menu():
 def login_menu():
     options = {
         "login with password": login_with_pass,
-        "login with phone number": login_with_phone
+        "login with phone number": login_with_phone,
+        "back to home": main_menu
     }
     menu(options)
 
@@ -65,9 +67,18 @@ def close_app():
 def set_main_page():
     bot.set_main_page()
 
-def add_register_box():
-    count = int(input("how many should add? "))
-    bot.add_register_box(count)
+def fill_register():
+    bot.fill_register_form({
+        "first_name" : "علی",
+        "last_name" : "جوادی",
+        "nid" : "0150545213",
+        "gender" : "male",
+        "birthday" : {"day" : "18", "month" : "12", "year" : "1362"}
+        })
+
+def test():
+    bot.test()
+
 
 if __name__ == "__main__":
     main()
